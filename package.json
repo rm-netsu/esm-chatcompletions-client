@@ -13,14 +13,22 @@
 		}
 	},
 	"files": [
-		"dist"
+		"dist",
+		"README.md"
 	],
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
 	"scripts": {
 		"build": "bun build src/index.ts --outdir=dist --target=node --format=esm --minify --sourcemap && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
 		"build:browser": "bun build src/index.ts --outdir=dist --target=browser --format=esm --minify --sourcemap && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
-		"typecheck": "tsc --noEmit"
+		"build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --apply ."
 	},
 	"devDependencies": {
+		"@biomejs/biome": "latest",
 		"@types/bun": "latest",
 		"typescript": "^5.3.0"
 	},
@@ -36,7 +44,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/rm-netsu/esm-chatcompletions-client"
+		"url": "git+https://github.com/rm-netsu/esm-chatcompletions-client.git"
 	},
 	"author": "rm-netsu",
 	"engines": {

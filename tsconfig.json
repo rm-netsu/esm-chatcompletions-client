@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
+		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"declaration": true,
 		"declarationMap": true,
+		"outDir": "./dist",
 		"strict": true,
 		"noImplicitAny": true,
 		"strictNullChecks": true,

@@ -3,26 +3,26 @@
  * A zero-dependency, ESM-compatible client for OpenAI-compatible Chat Completions APIs
  */
 
-import type {
-	ChatClientConfig,
-	ChatCompletionRequest,
-	ChatCompletionResponse,
-	ChatCompletionChunk,
-	ChatMessage,
-	RequestOptions,
-	ChatToolCall,
-} from './types.js'
-
 import {
-	APIError,
 	AbortError,
-	TimeoutError,
-	NetworkError,
+	APIError,
 	ConfigurationError,
+	NetworkError,
+	TimeoutError,
 	ValidationError,
 } from './errors.js'
 
 import { parseSSEStream } from './streaming.js'
+
+import type {
+	ChatClientConfig,
+	ChatCompletionChunk,
+	ChatCompletionRequest,
+	ChatCompletionResponse,
+	ChatMessage,
+	ChatToolCall,
+	RequestOptions,
+} from './types.js'
 
 /**
  * Default API configuration

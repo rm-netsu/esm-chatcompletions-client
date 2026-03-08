@@ -15,57 +15,40 @@ export { ChatClient, createChatClient } from './client.js'
 // Type Exports
 // ============================================
 
-// Message Types
-export type {
-	ChatRole,
-	ContentPart,
-	TextContentPart,
-	ImageContentPart,
-	ChatMessage,
-} from './types.js'
-
-// Tool Types
-export type {
-	ChatFunctionDefinition,
-	ChatTool,
-	ChatToolCall,
-	ToolCallResult,
-} from './types.js'
-
-// Request Types
-export type {
-	ChatCompletionRequest,
-	ResponseFormat,
-	ToolChoice,
-	LogitBias,
-} from './types.js'
-
-// Response Types
-export type {
-	CompletionUsage,
-	FinishReason,
-	ChatCompletionChoice,
-	ChatCompletionLogprobs,
-	ChatCompletionTokenLogprob,
-	ChatCompletionResponse,
-	ChatCompletionChunk,
-	ChatCompletionChunkChoice,
-	APIErrorResponse,
-} from './types.js'
-
-// Configuration Types
-export type {
-	ChatClientConfig,
-	RequestOptions,
-} from './types.js'
-
 // Utility Types
 export type { ClientError } from './errors.js'
 
+export type {
+	APIErrorResponse,
+	ChatClientConfig,
+	ChatCompletionChoice,
+	ChatCompletionChunk,
+	ChatCompletionChunkChoice,
+	ChatCompletionLogprobs,
+	ChatCompletionRequest,
+	ChatCompletionResponse,
+	ChatCompletionTokenLogprob,
+	ChatFunctionDefinition,
+	ChatMessage,
+	ChatRole,
+	ChatTool,
+	ChatToolCall,
+	CompletionUsage,
+	ContentPart,
+	FinishReason,
+	ImageContentPart,
+	LogitBias,
+	RequestOptions,
+	ResponseFormat,
+	TextContentPart,
+	ToolCallResult,
+	ToolChoice,
+} from './types.js'
+
 // Utility Functions
 export {
-	isStringContent,
 	isContentPartArray,
+	isStringContent,
 } from './types.js'
 
 // ============================================
@@ -73,13 +56,13 @@ export {
 // ============================================
 
 export {
-	APIError,
 	AbortError,
-	TimeoutError,
-	NetworkError,
+	APIError,
 	ConfigurationError,
-	ValidationError,
+	NetworkError,
 	ParseError,
+	TimeoutError,
+	ValidationError,
 } from './errors.js'
 
 // ============================================
@@ -87,10 +70,10 @@ export {
 // ============================================
 
 export {
-	parseSSEStream,
-	createStreamIterator,
 	collectStreamResponse,
 	createSSEToJSONLines,
+	createStreamIterator,
+	parseSSEStream,
 } from './streaming.js'
 
 // ============================================

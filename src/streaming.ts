@@ -3,8 +3,8 @@
  * Implements SSE (Server-Sent Events) parsing without external dependencies
  */
 
+import { AbortError, ParseError } from './errors.js'
 import type { ChatCompletionChunk } from './types.js'
-import { ParseError, AbortError } from './errors.js'
 
 /** Internal SSE event structure */
 interface SSEEvent {
