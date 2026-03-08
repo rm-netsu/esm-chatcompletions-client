@@ -115,4 +115,5 @@ export const toolMessage = (
 // ============================================
 
 /** Library version */
-export const VERSION = '0.1.0-vc.1'
+import pkg from '../package.json' with { type: 'json' }
+export const VERSION = pkg.version
