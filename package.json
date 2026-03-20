@@ -1,0 +1,53 @@
+{
+	"name": "@rm-netsu/esm-chatcompletions-client",
+	"version": "0.2.0",
+	"description": "A lightweight, zero-dependency ESM client library for the Chat Completions API",
+	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"scripts": {
+		"build": "bun build src/index.ts --outdir=dist --target=node --format=esm --minify --sourcemap && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
+		"build:browser": "bun build src/index.ts --outdir=dist --target=browser --format=esm --minify --sourcemap && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
+		"build:types": "tsc --declaration --emitDeclarationOnly --outDir dist",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --apply ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "latest",
+		"@types/bun": "latest",
+		"typescript": "^5"
+	},
+	"keywords": [
+		"openai",
+		"chatgpt",
+		"chatcompletions",
+		"llm",
+		"ai",
+		"client",
+		"esm"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rm-netsu/esm-chatcompletions-client.git"
+	},
+	"author": "rm-netsu",
+	"engines": {
+		"node": ">=18.0.0",
+		"bun": ">=1.0.0"
+	}
+}
