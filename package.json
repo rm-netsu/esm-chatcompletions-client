@@ -1,6 +1,6 @@
 {
 	"name": "@rm-netsu/esm-chatcompletions-client",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "A lightweight, zero-dependency ESM client library for the Chat Completions API",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -17,7 +17,8 @@
 		"README.md"
 	],
 	"publishConfig": {
-		"registry": "https://npm.pkg.github.com"
+		"registry": "https://npm.pkg.github.com",
+		"access": "public"
 	},
 	"scripts": {
 		"build": "bun build src/index.ts --outdir=dist --target=node --format=esm --minify --sourcemap && bunx tsc --declaration --emitDeclarationOnly --outDir dist",
