@@ -1,6 +1,6 @@
 {
 	"name": "@rm-netsu/esm-chatcompletions-client",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "A lightweight, zero-dependency ESM client library for the Chat Completions API",
 	"type": "module",
 	"main": "./dist/index.js",
