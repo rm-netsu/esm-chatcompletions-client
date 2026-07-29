@@ -218,6 +218,8 @@ export interface ClientOptions {
 	headers?: HeadersProvider
 	/** Overall request timeout in milliseconds. `0` disables it. */
 	timeout?: number
+	/** Maximum decoded SSE event size. Defaults to 1 MiB. */
+	maxSSEEventSize?: number
 	/** Custom Fetch implementation. */
 	fetch?: typeof globalThis.fetch
 	/** @deprecated OpenAI-specific compatibility shim. Use `vendors/openai`. */

@@ -18,6 +18,7 @@ import type {
 } from './types.js'
 
 const DEFAULT_BASE_URL = 'https://api.openai.com/v1'
+const DEFAULT_MAX_SSE_EVENT_SIZE = 1024 * 1024
 
 interface AbortContext {
 	signal: AbortSignal | undefined
@@ -156,6 +157,7 @@ export class ChatCompletionsClient {
 	readonly #project: string | undefined
 	readonly #headers: HeadersProvider | undefined
 	readonly #timeout: number
+	readonly #maxSSEEventSize: number
 	readonly #fetch: typeof globalThis.fetch
 
 	constructor(options: ClientOptions = {}) {
@@ -172,10 +174,20 @@ export class ChatCompletionsClient {
 		this.#project = options.project
 		this.#headers = options.headers
 		this.#timeout = options.timeout ?? 0
+		this.#maxSSEEventSize =
+			options.maxSSEEventSize ?? DEFAULT_MAX_SSE_EVENT_SIZE
 		this.#fetch = fetchImplementation
 
 		if (!Number.isFinite(this.#timeout) || this.#timeout < 0) {
 			throw new RangeError('timeout must be a non-negative finite number')
+		}
+		if (
+			!Number.isFinite(this.#maxSSEEventSize) ||
+			this.#maxSSEEventSize <= 0
+		) {
+			throw new RangeError(
+				'maxSSEEventSize must be a positive finite number',
+			)
 		}
 	}
 
@@ -272,9 +284,9 @@ export class ChatCompletionsClient {
 		const timeout = options?.timeout ?? this.#timeout
 
 		try {
-			for await (const chunk of streamSSE(opened.response)) {
-				yield chunk as Chunk
-			}
+			yield* streamSSE<Chunk>(opened.response, {
+				maxEventSize: this.#maxSSEEventSize,
+			})
 		} catch (error) {
 			throw normalizeRequestError(error, opened.abort, timeout)
 		} finally {
