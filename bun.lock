@@ -4,11 +4,8 @@
     "": {
       "name": "@rm-netsu/esm-chatcompletions-client",
       "devDependencies": {
-        "@biomejs/biome": "^2.4.8",
-        "@types/bun": "latest",
-      },
-      "peerDependencies": {
-        "typescript": "^5",
+        "@biomejs/biome": "2.4.8",
+        "typescript": "5.9.3",
       },
     },
   },
