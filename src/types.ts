@@ -208,11 +208,28 @@ export interface ToolCallDelta {
 }
 
 export interface ClientOptions {
-	apiKey: string
-	baseURL?: string
-	organization?: string
-	project?: string
-	headers?: Record<string, string>
+	/** Optional bearer token. Omit it and supply custom headers for other auth. */
+	apiKey?: string
+	/** Base URL to which `/chat/completions` is appended. */
+	baseURL?: string | URL
+	/** Full endpoint URL. Takes precedence over `baseURL`. */
+	endpoint?: string | URL
+	/** Static or lazily evaluated headers, useful for rotating credentials. */
+	headers?: HeadersProvider
+	/** Overall request timeout in milliseconds. `0` disables it. */
 	timeout?: number
+	/** Custom Fetch implementation. */
 	fetch?: typeof globalThis.fetch
+	/** @deprecated OpenAI-specific compatibility shim. Use `vendors/openai`. */
+	organization?: string
+	/** @deprecated OpenAI-specific compatibility shim. Use `vendors/openai`. */
+	project?: string
+}
+
+export interface RequestOptions {
+	signal?: AbortSignal
+	/** Overrides the client timeout for this request. */
+	timeout?: number
+	/** Overrides matching client headers for this request. */
+	headers?: HeadersInit
 }
