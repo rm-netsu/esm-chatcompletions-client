@@ -1,7 +1,4 @@
-import type {
-	ChatCompletionRequest,
-	ContentPart,
-} from '../src/index.js'
+import type { ChatCompletionRequest, ContentPart } from '../src/index.js'
 import type {
 	OpenAIChatCompletionRequest,
 	OpenAIDeveloperMessage,

@@ -46,7 +46,10 @@ export class APIConnectionError extends ChatCompletionsError {
 }
 
 export class RequestAbortedError extends APIConnectionError {
-	constructor(public readonly reason?: unknown, cause?: unknown) {
+	constructor(
+		public readonly reason?: unknown,
+		cause?: unknown,
+	) {
 		super('Request was aborted', cause)
 		this.name = 'RequestAbortedError'
 	}

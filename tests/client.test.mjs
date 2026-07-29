@@ -32,7 +32,8 @@ function streamResponse(parts, onCancel) {
 	return new Response(
 		new ReadableStream({
 			start(controller) {
-				for (const part of parts) controller.enqueue(encoder.encode(part))
+				for (const part of parts)
+					controller.enqueue(encoder.encode(part))
 				controller.close()
 			},
 			cancel(reason) {
@@ -115,7 +116,6 @@ test('joins multiline SSE data fields', async () => {
 	assert.deepEqual(result, [chunk])
 })
 
-
 test('supports CRLF and lone-CR SSE line endings', async () => {
 	for (const separator of ['\r\n', '\r']) {
 		const response = streamResponse([
@@ -194,7 +194,6 @@ test('keeps the timeout active when a user signal is also supplied', async () =>
 	)
 })
 
-
 test('keeps the timeout active while a streaming body is being read', async () => {
 	const client = new ChatCompletionsClient({
 		timeout: 20,
@@ -204,7 +203,10 @@ test('keeps the timeout active while a streaming body is being read', async () =
 					start(controller) {
 						const fail = () => controller.error(init.signal.reason)
 						if (init.signal?.aborted) fail()
-						else init.signal?.addEventListener('abort', fail, { once: true })
+						else
+							init.signal?.addEventListener('abort', fail, {
+								once: true,
+							})
 					},
 				}),
 			),
@@ -260,7 +262,6 @@ test('preserves a plain-text HTTP error body', async () => {
 		return true
 	})
 })
-
 
 test('retains the upstream request id on HTTP errors', async () => {
 	const client = new ChatCompletionsClient({

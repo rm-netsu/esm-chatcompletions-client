@@ -33,7 +33,10 @@ interface OpenResponse {
 
 function resolveEndpoint(options: ClientOptions): string {
 	if (options.endpoint) return String(options.endpoint)
-	const baseURL = String(options.baseURL ?? DEFAULT_BASE_URL).replace(/\/+$/, '')
+	const baseURL = String(options.baseURL ?? DEFAULT_BASE_URL).replace(
+		/\/+$/,
+		'',
+	)
 	return `${baseURL}/chat/completions`
 }
 
@@ -204,7 +207,8 @@ export class ChatCompletionsClient {
 		try {
 			const headers = new Headers()
 			headers.set('Content-Type', 'application/json')
-			if (this.#apiKey) headers.set('Authorization', `Bearer ${this.#apiKey}`)
+			if (this.#apiKey)
+				headers.set('Authorization', `Bearer ${this.#apiKey}`)
 			if (this.#organization) {
 				headers.set('OpenAI-Organization', this.#organization)
 			}

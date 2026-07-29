@@ -79,8 +79,7 @@ export async function* streamSSE<
 		try {
 			return JSON.parse(data) as Chunk
 		} catch (cause) {
-			const preview =
-				data.length > 512 ? `${data.slice(0, 512)}…` : data
+			const preview = data.length > 512 ? `${data.slice(0, 512)}…` : data
 			throw new ChatCompletionsError(
 				`Failed to parse SSE data: ${preview}`,
 				undefined,
