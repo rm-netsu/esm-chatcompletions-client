@@ -1,24 +1,16 @@
-export interface ChatCompletionRequest {
-	model: string
-	messages: ChatMessage[]
-	temperature?: number
-	top_p?: number
-	n?: number
-	stream?: boolean
-	stop?: string | string[]
-	max_tokens?: number
-	presence_penalty?: number
-	frequency_penalty?: number
-	logit_bias?: Record<string, number>
-	user?: string
+export type MaybePromise<T> = T | Promise<T>
 
-	// Optional advanced fields
-	functions?: unknown[]
-	function_call?: unknown
-	tools?: unknown[]
-	tool_choice?: unknown
-	response_format?: unknown
-	seed?: number
+export type HeadersProvider =
+	| HeadersInit
+	| (() => MaybePromise<HeadersInit | undefined>)
+
+export type ExtensibleString<Known extends string> =
+	| Known
+	| (string & Record<never, never>)
+
+export interface BaseChatMessage {
+	role: string
+	[key: string]: unknown
 }
 
 export type ChatMessage =
@@ -28,55 +20,129 @@ export type ChatMessage =
 	| ToolMessage
 	| FunctionMessage
 
-export interface SystemMessage {
+export interface SystemMessage extends BaseChatMessage {
 	role: 'system'
 	content: string
 	name?: string
 }
 
-export interface UserMessage {
+export interface UserMessage extends BaseChatMessage {
 	role: 'user'
 	content: string | ContentPart[]
 	name?: string
 }
 
-export interface AssistantMessage {
+export interface AssistantMessage extends BaseChatMessage {
 	role: 'assistant'
 	content?: string | null
 	name?: string
 	tool_calls?: ToolCall[]
-	function_call?: unknown
+	function_call?: FunctionCall
 }
 
-export interface ToolMessage {
+export interface ToolMessage extends BaseChatMessage {
 	role: 'tool'
 	content: string
 	tool_call_id: string
 }
 
-export interface FunctionMessage {
+/** @deprecated Use tool messages and `tools` where the provider supports them. */
+export interface FunctionMessage extends BaseChatMessage {
 	role: 'function'
 	content: string
 	name: string
 }
 
-export interface ContentPart {
-	type: 'text' | 'image_url'
-	text?: string
-	image_url?: {
+export type ContentPart = TextContentPart | ImageContentPart
+
+export interface TextContentPart {
+	type: 'text'
+	text: string
+}
+
+export interface ImageContentPart {
+	type: 'image_url'
+	image_url: {
 		url: string
 		detail?: 'auto' | 'low' | 'high'
 	}
 }
 
+export interface FunctionDefinition {
+	name: string
+	description?: string
+	parameters?: Record<string, unknown>
+	strict?: boolean
+}
+
+export interface FunctionCall {
+	name: string
+	arguments: string
+}
+
 export interface ToolCall {
 	id: string
 	type: 'function'
-	function: {
-		name: string
-		arguments: string
-	}
+	function: FunctionCall
 }
+
+export interface FunctionTool {
+	type: 'function'
+	function: FunctionDefinition
+}
+
+export type Tool = FunctionTool
+
+export type ToolChoice =
+	| 'none'
+	| 'auto'
+	| 'required'
+	| {
+			type: 'function'
+			function: { name: string }
+	  }
+
+export type FunctionChoice = 'none' | 'auto' | { name: string }
+
+export interface ResponseFormat {
+	type: ExtensibleString<'text' | 'json_object'>
+	[key: string]: unknown
+}
+
+/**
+ * Common subset shared by most OpenAI-compatible Chat Completions APIs.
+ * Unknown provider fields are intentionally allowed and passed through as-is.
+ */
+export interface ChatCompletionRequest<
+	Message extends BaseChatMessage = ChatMessage,
+> {
+	model: string
+	messages: Message[]
+	temperature?: number
+	top_p?: number
+	n?: number
+	/** Ignored by the client; selected by the called method. */
+	stream?: boolean
+	stop?: string | string[] | null
+	max_tokens?: number
+	presence_penalty?: number
+	frequency_penalty?: number
+	logit_bias?: Record<string, number>
+	user?: string
+	tools?: Tool[]
+	tool_choice?: ToolChoice
+	response_format?: ResponseFormat
+	seed?: number
+	/** @deprecated Use `tools`. */
+	functions?: FunctionDefinition[]
+	/** @deprecated Use `tool_choice`. */
+	function_call?: FunctionChoice
+	[key: string]: unknown
+}
+
+export type FinishReason = ExtensibleString<
+	'stop' | 'length' | 'tool_calls' | 'content_filter' | 'function_call'
+>
 
 export interface ChatCompletionResponse {
 	id: string
@@ -86,19 +152,24 @@ export interface ChatCompletionResponse {
 	choices: Choice[]
 	usage?: Usage
 	system_fingerprint?: string
+	[key: string]: unknown
 }
 
 export interface Choice {
 	index: number
 	message: AssistantMessage
-	finish_reason: 'stop' | 'length' | 'tool_calls' | 'content_filter' | null
+	finish_reason: FinishReason | null
 	logprobs?: unknown
+	[key: string]: unknown
 }
 
 export interface Usage {
 	prompt_tokens: number
 	completion_tokens: number
 	total_tokens: number
+	prompt_tokens_details?: Record<string, unknown>
+	completion_tokens_details?: Record<string, unknown>
+	[key: string]: unknown
 }
 
 export interface ChatCompletionChunk {
@@ -107,22 +178,41 @@ export interface ChatCompletionChunk {
 	created: number
 	model: string
 	choices: ChoiceChunk[]
+	usage?: Usage | null
 	system_fingerprint?: string
+	[key: string]: unknown
 }
 
 export interface ChoiceChunk {
 	index: number
-	delta: Partial<AssistantMessage>
-	finish_reason: 'stop' | 'length' | 'tool_calls' | 'content_filter' | null
+	delta: ChatCompletionDelta
+	finish_reason: FinishReason | null
 	logprobs?: unknown
+	[key: string]: unknown
+}
+
+export interface ChatCompletionDelta {
+	role?: 'assistant'
+	content?: string | null
+	tool_calls?: ToolCallDelta[]
+	function_call?: Partial<FunctionCall>
+	[key: string]: unknown
+}
+
+export interface ToolCallDelta {
+	index: number
+	id?: string
+	type?: 'function'
+	function?: Partial<FunctionCall>
+	[key: string]: unknown
 }
 
 export interface ClientOptions {
 	apiKey: string
-	baseURL?: string // default: https://api.openai.com/v1
+	baseURL?: string
 	organization?: string
 	project?: string
 	headers?: Record<string, string>
-	timeout?: number // milliseconds, 0 = no timeout
-	fetch?: typeof fetch // custom fetch (e.g. for Node < 18)
+	timeout?: number
+	fetch?: typeof globalThis.fetch
 }
