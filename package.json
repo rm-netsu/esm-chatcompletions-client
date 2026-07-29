@@ -32,11 +32,12 @@
 		"clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
 		"build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
 		"build:types": "tsc -p tsconfig.json --emitDeclarationOnly",
-		"typecheck": "tsc -p tsconfig.json --noEmit",
-		"lint": "biome lint src",
-		"lint:fix": "biome lint --write src",
-		"format": "biome format --write src README.md",
-		"format:check": "biome format src README.md"
+		"typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.types.json",
+		"test": "tsc -p tsconfig.json && node --test tests/*.test.mjs && tsc -p tsconfig.types.json",
+		"lint": "biome lint src tests",
+		"lint:fix": "biome lint --write src tests",
+		"format": "biome format --write src tests README.md",
+		"format:check": "biome format src tests README.md"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.8",
