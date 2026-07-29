@@ -33,7 +33,14 @@ jobs:
         run: bun run test
 
       - name: Bun runtime smoke test
-        run: bun -e "import('./dist/index.js').then(m => new m.ChatCompletionsClient({ fetch: async () => Response.json({}) }))"
+        run: |
+          bun -e '
+            const { ChatCompletionsClient } = await import("./dist/index.js");
+
+            new ChatCompletionsClient({
+              fetch: async () => Response.json({}),
+            });
+          '
 
       - name: Package dry run
         run: npm pack --dry-run
